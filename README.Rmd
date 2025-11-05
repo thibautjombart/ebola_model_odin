@@ -1,5 +1,5 @@
 ---
-title: A stochastic, discrete compartmental model for Ebola transmission
+title: A stochastic meta-population model of Ebola virus disease transmission
 author: Thibaut Jombart
 output: github_document
 ---
