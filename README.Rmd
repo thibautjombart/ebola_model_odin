@@ -180,7 +180,7 @@ Here we illustrate a single model run for 365 days (one run takes about 10-20s
 on a standard desktop). Note that the random seed is set here for 
 reproducibility purpose only.
 
-```{r cache = TRUE}
+```{r }
 set.seed(1)
 system.time(res <- model$run(1:365))
 class(res)
