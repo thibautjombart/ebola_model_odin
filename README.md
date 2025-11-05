@@ -40,7 +40,7 @@ model_generator <- odin::odin(path_model)
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.1/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c odin.c -o odin.o
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.1/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c registration.c -o registration.o
 #>      gcc -shared -static-libgcc -o ebolae1b5f94f.dll tmp.def odin.o registration.o -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib/x64 -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib -LC:/PROGRA~1/R/R-45~1.1/bin/x64 -lR
-#>      installing to C:/Users/thiba/AppData/Local/Temp/Rtmp6RQAS6/devtools_install_5bfc209d6448/00LOCK-file5bfc5c806742/00new/ebolae1b5f94f/libs/x64
+#>      installing to C:/Users/thiba/AppData/Local/Temp/Rtmpq6WNlG/devtools_install_46945e537252/00LOCK-file469431d72f41/00new/ebolae1b5f94f/libs/x64
 #>   ─  DONE (ebolae1b5f94f)
 #> 
 #> ℹ Loading ebolae1b5f94f
@@ -246,7 +246,7 @@ reproducibility purpose only.
 set.seed(1)
 system.time(res <- model$run(1:365))
 #>    user  system elapsed 
-#>   14.49    0.21   14.76
+#>   13.61    0.11   13.80
 class(res)
 #> [1] "matrix" "array"
 dim(res)
@@ -288,8 +288,8 @@ head(res_smry)
 #> 2    2 0 0 1 0 0 0 0
 #> 3    3 0 0 1 0 0 0 0
 #> 4    4 0 0 1 0 0 0 0
-#> 5    5 0 1 1 0 0 0 0
-#> 6    6 0 1 1 0 0 0 0
+#> 5    5 0 0 1 0 0 0 0
+#> 6    6 0 0 1 0 0 0 0
 
 res_smry %>%
   pivot_longer(-1, names_to = "Compartment", values_to = "n") %>% 
