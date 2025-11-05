@@ -1,0 +1,183 @@
+---
+output: github_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/",
+  out.width = "65%"
+)
+```
+
+## Required libraries
+
+We load required libraries:
+```{r}
+library(tidyverse)
+library(rio)
+library(here)
+library(odin)
+```
+
+
+## Loading and compiling the odin script
+
+The model is implemented in the _odin_ script _ebola.R_:
+```{r}
+path_model <- here::here("odin", "ebola.R")
+model_generator <- odin::odin(path_model)
+class(model_generator)
+model_generator
+```
+
+The object `model_generator` can be used to create new instance of the model using the `$new()` operator. But first, we need to read in inputs for the model.
+
+
+## Data inputs
+
+We read inputs including populations locations and sizes:
+
+```{r}
+file_patches <- here::here("data", "patches_857.csv")
+patches <- rio::import(file_patches) %>% 
+  tibble() %>% 
+  mutate(
+    mean_intros = eta * pop_size * 365, # mean introductions per year
+    weight_intros = mean_intros / sum(mean_intros)
+  ) 
+dim(patches)
+head(patches)
+```
+
+We read in the connectivity matrix between the 857 populations
+
+```{r}
+file_delta <- here::here("data", "delta_857.rds")
+delta <- rio::import(file_delta)
+dim(delta)
+delta[1:4, 1:4]
+```
+
+
+## Random distributions
+
+Probability distributions are used for some of the inputs of the model, in line with estimates reported in the literature.
+
+```{r}
+
+# Inverse of the incubation time, average 9.4 days - West Africa 2014
+r_alpha <- function(n) {
+  mean_incub <- rlnorm(n, meanlog = log(9.4), sdlog = 0.05)
+  1 / mean_incub
+}
+  
+# inverse of the duration of illness
+# this one is a bit more complex, as we have distinct mean durations
+# for fatal cases and survivors, so it is a mix based on the CFR (assumed 2/3 
+# by default)
+# Time to recovery 16.4 ± 6.5 West Africa 2014
+# Time to death 7.5 ± 6.8 West Africa 2014
+r_gamma <- function(n, cfr = 2/3) {
+  weighted_mean <- ((1 - cfr) * 16.4) + (cfr * 7.5)
+  mean_illness <- rlnorm(n, meanlog = log(weighted_mean), sdlog = 0.1)
+  1 / mean_illness
+}
+
+# beta - rate of infection; for this one, we first get values of R0, and then 
+# use the conversion: R0 = beta / gamma (Keeling & Rohani 2008 p.42), so 
+# beta = R0 * gamma
+#
+# We make a distribution compatible with most recent outbreaks
+r_beta <- function(gamma) {
+  n <- length(gamma)
+  R0 <- rlnorm(n, meanlog = log(1.5), sdlog = 0.1)
+  R0 * gamma
+}
+
+## coefficients for the betas of I, C, F
+w_beta_ICF <- c(0.8, 0.0025, 1.3)
+
+```
+
+
+
+## Creating an instance of the model
+
+Here we create a new model instance using `model_generator$new()`, using the population structure we have just loaded.
+
+```{r}
+
+J <- nrow(patches) # number of patches
+
+## draw initial introductions
+ini_I <- rmultinom(
+  n = 1,
+  size = 2, # specify the number of initial introductions here
+  prob = patches$weight_intros
+  ) %>% 
+  as.integer()
+
+## draw random parameters
+alpha <- r_alpha(1)
+gamma <- r_gamma(1)
+beta <- r_beta(gamma)
+beta_I <- beta * w_beta_ICF[1]
+beta_C <- beta * w_beta_ICF[2]
+beta_F <- beta * w_beta_ICF[3]
+
+## eta must be a matrix time x patches; it is here constant over time, so we 
+## just repeat the first row, 365 times, which will be the duration of the 
+## simulation
+eta_mat <- matrix(patches$eta, byrow = TRUE, nrow = 365, ncol = J)
+dim(eta_mat)
+
+model <- model_generator$new(
+  n_patches = J,
+  ini_S = as.integer(patches$pop_size),
+  ini_E = rep(0L, J),
+  ini_I = ini_I,
+  ini_V = rep(0L, J),
+  ini_F = rep(0L, J),
+  ini_D = rep(0L, J),
+  ini_C = rep(0L, J),
+  ini_R = rep(0L, J),
+  area = rep(1L, J), # no scaling of betas by area
+  eta = eta_mat,
+  delta = delta,
+  alpha = alpha,
+  gamma = gamma, 
+  beta_I = beta_I, 
+  beta_C = beta_C, 
+  beta_F = beta_F, 
+  tau = 1/2, # burial after 2 days
+  pi = 1/10, # 1/10 survivors become convalescent
+  rho = 1/90, # convalescent take 90 days to clear infection fully
+  cfr = 2/3, 
+  p_sdb = 0.3, # 30% safe and dignified burials in normal times
+  p_sdb_alert = 0.5, # 50% safe and dignified burials in alert
+  alert_threshold = c(0.1, 0.1),  # alert triggers when average 0.1 imported cases
+  alert_release = 21, # alert stops after 3 weeks of inactivity
+  alert_efficacy = 0.2, # 20% transmission reduction in alert
+  vacc_coverage_alert = 0, # no vaccination during alerts
+  p_sdb_response = 0.95, # 95% safe and dignified burials in response
+  response_threshold = c(3, 1), # response triggers at 3 cases, stops when there are no cases
+  response_release = 42, # response stops after 6 weeks of inactivity
+  response_efficacy = 0.5, # 50% transmission reduction in response
+  vacc_coverage_response = 0.2/365, # vaccination ~ 20% of the pop in a year in response
+  vacc_efficacy = 0.95
+  
+)
+
+```
+
+
+## Running the model
+
+Here we illustrate a single model run for 365 days:
+```{r}
+
+```
+
