@@ -227,7 +227,7 @@ res_smry %>%
 
 ### Mapping total cases
 
-```{r}
+```{r fig.width = 5, fig.height = 5}
 to_keep <- c(grep("^[EIDFRC]", colnames(res)))
 temp <- res[res[, "step"] == 365, to_keep, drop = TRUE]
 patch_id <- as.integer(gsub("[^[:digit:]]", "", names(temp)))
