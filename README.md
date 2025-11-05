@@ -8,13 +8,13 @@ We load required libraries:
 
 ``` r
 library(tidyverse)
-#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+#> ── Attaching core tidyverse packages ───────────────── tidyverse 2.0.0 ──
 #> ✔ dplyr     1.1.4     ✔ readr     2.1.5
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.1
 #> ✔ ggplot2   3.5.2     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
 #> ✔ purrr     1.0.4     
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ─────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
 #> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
@@ -34,7 +34,7 @@ model_generator <- odin::odin(path_model)
 #> Loading required namespace: pkgbuild
 #> Generating model in c
 #> ℹ Re-compiling ebolae1b5f94f (debug build)
-#> ── R CMD INSTALL ───────────────────────────────────────────────────────────────
+#> ── R CMD INSTALL ────────────────────────────────────────────────────────
 #>   ─  installing *source* package 'ebolae1b5f94f' ...
 #>      ** this is package 'ebolae1b5f94f' version '0.0.1'
 #>    ** using staged installation
@@ -43,7 +43,7 @@ model_generator <- odin::odin(path_model)
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.1/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c odin.c -o odin.o
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.1/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c registration.c -o registration.o
 #>      gcc -shared -static-libgcc -o ebolae1b5f94f.dll tmp.def odin.o registration.o -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib/x64 -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib -LC:/PROGRA~1/R/R-45~1.1/bin/x64 -lR
-#>      installing to C:/Users/thiba/AppData/Local/Temp/RtmpyIRWd1/devtools_install_72105c8642cc/00LOCK-file72103bbf1b3e/00new/ebolae1b5f94f/libs/x64
+#>      installing to C:/Users/thiba/AppData/Local/Temp/Rtmpe0k0NR/devtools_install_67343cbc7bf1/00LOCK-file67343aae501f/00new/ebolae1b5f94f/libs/x64
 #>   ─  DONE (ebolae1b5f94f)
 #> 
 #> ℹ Loading ebolae1b5f94f
@@ -103,14 +103,15 @@ dim(patches)
 #> [1] 857   9
 head(patches)
 #> # A tibble: 6 × 9
-#>      V1     x     y     eta pop_size area_sqkm cell.id mean_intros weight_intros
-#>   <int> <dbl> <dbl>   <dbl>    <int>     <dbl>   <int>       <dbl>         <dbl>
-#> 1     1  19.1 -4.02 3.02e-9     1114      21.3  1.85e7    0.00123      0.000696 
-#> 2     2  19.2 -4.02 2.69e-9     3357      21.3  1.85e7    0.00330      0.00187  
-#> 3     3  19.2 -4.02 1.77e-9     2070      21.3  1.85e7    0.00134      0.000757 
-#> 4     4  19.2 -4.02 1.89e-9      155      21.3  1.85e7    0.000107     0.0000607
-#> 5     5  19.3 -4.02 3.01e-9     2911      21.3  1.85e7    0.00320      0.00181  
-#> 6     6  19.3 -4.02 3.02e-9      859      21.3  1.85e7    0.000945     0.000536
+#>      V1     x     y           eta pop_size area_sqkm  cell.id mean_intros
+#>   <int> <dbl> <dbl>         <dbl>    <int>     <dbl>    <int>       <dbl>
+#> 1     1  19.1 -4.02 0.00000000302     1114      21.3 18459819    0.00123 
+#> 2     2  19.2 -4.02 0.00000000269     3357      21.3 18459820    0.00330 
+#> 3     3  19.2 -4.02 0.00000000177     2070      21.3 18459821    0.00134 
+#> 4     4  19.2 -4.02 0.00000000189      155      21.3 18459822    0.000107
+#> 5     5  19.3 -4.02 0.00000000301     2911      21.3 18459823    0.00320 
+#> 6     6  19.3 -4.02 0.00000000302      859      21.3 18459824    0.000945
+#> # ℹ 1 more variable: weight_intros <dbl>
 ```
 
 We read in the connectivity matrix between the 857 populations
@@ -118,7 +119,8 @@ We read in the connectivity matrix between the 857 populations
 ``` r
 file_delta <- here::here("data", "delta_857.rds")
 delta <- rio::import(file_delta)
-#> Warning: Missing `trust` will be set to FALSE by default for RDS in 2.0.0.
+#> Warning: Missing `trust` will be set to FALSE by default for RDS in
+#> 2.0.0.
 dim(delta)
 #> [1] 857 857
 delta[1:4, 1:4]
@@ -185,6 +187,7 @@ ini_I <- rmultinom(
   as.integer()
 
 ## draw random parameters
+set.seed(123)
 alpha <- r_alpha(1)
 gamma <- r_gamma(1)
 beta <- r_beta(gamma)
@@ -241,9 +244,10 @@ Here we illustrate a single model run for 365 days (one run takes about
 10-20s on a standard desktop).
 
 ``` r
+set.seed(123)
 system.time(res <- model$run(1:365))
 #>    user  system elapsed 
-#>   13.41    0.07   13.56
+#>   13.69    0.12   13.89
 class(res)
 #> [1] "matrix" "array"
 dim(res)
@@ -285,11 +289,11 @@ res_smry <- cbind(time = 1:365, data.frame(res_smry))
 head(res_smry)
 #>   time V E I F D C R
 #> 1    1 0 0 1 0 0 0 0
-#> 2    2 0 2 1 0 0 0 0
-#> 3    3 0 2 1 0 0 0 0
-#> 4    4 0 1 2 0 0 0 0
-#> 5    5 0 1 2 0 0 0 0
-#> 6    6 0 2 2 0 0 0 0
+#> 2    2 0 1 1 0 0 0 0
+#> 3    3 0 3 1 0 0 0 0
+#> 4    4 0 3 0 0 1 0 0
+#> 5    5 0 3 0 0 1 0 0
+#> 6    6 0 2 1 0 1 0 0
 
 res_smry %>%
   pivot_longer(-1, names_to = "Compartment", values_to = "n") %>% 
@@ -307,8 +311,8 @@ res_smry %>%
 #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 #> ℹ Please use `linewidth` instead.
 #> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning
+#> was generated.
 ```
 
 <img src="figures/unnamed-chunk-9-1.png" width="65%" />
