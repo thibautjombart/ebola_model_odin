@@ -1,4 +1,6 @@
 ---
+title: A stochastic, discrete compartmental model for Ebola transmission
+author: Thibaut Jombart
 output: github_document
 ---
 
@@ -200,6 +202,8 @@ patches, either 'naive' (value: 1), 'alert' (value: 2), or 'response'
 
 ### Time series
 
+Here we first sum compartments across all patches, and visualize the results as a time series:
+
 ```{r}
 comps <- c("V", "E", "I", "F", "D", "C", "R")
 res_smry <- list()
@@ -225,7 +229,10 @@ res_smry %>%
   theme(legend.position = "bottom")
 ```
 
+
 ### Mapping total cases
+
+Here we first isolate all compartments corresponding to infections, and calculate total cases for every patch at the end of the simulation. Then we map the results:
 
 ```{r fig.width = 5, fig.height = 5}
 to_keep <- c(grep("^[EIDFRC]", colnames(res)))
