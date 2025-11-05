@@ -43,7 +43,7 @@ model_generator <- odin::odin(path_model)
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.1/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c odin.c -o odin.o
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.1/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c registration.c -o registration.o
 #>      gcc -shared -static-libgcc -o ebolae1b5f94f.dll tmp.def odin.o registration.o -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib/x64 -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib -LC:/PROGRA~1/R/R-45~1.1/bin/x64 -lR
-#>      installing to C:/Users/thiba/AppData/Local/Temp/Rtmpsxco1l/devtools_install_58ec303b5c5e/00LOCK-file58ec777d3576/00new/ebolae1b5f94f/libs/x64
+#>      installing to C:/Users/thiba/AppData/Local/Temp/RtmpqWRJiJ/devtools_install_2d64fb5285d/00LOCK-file2d644d082f2a/00new/ebolae1b5f94f/libs/x64
 #>   ─  DONE (ebolae1b5f94f)
 #> 
 #> ℹ Loading ebolae1b5f94f
@@ -154,9 +154,7 @@ r_gamma <- function(n, cfr = 2/3) {
   1 / mean_illness
 }
 
-# beta - rate of infection; for this one, we first get values of R0, and then 
-# use the conversion: R0 = beta / gamma (Keeling & Rohani 2008 p.42), so 
-# beta = R0 * gamma
+# beta - rate of infection; for this one, we first get values of R0, and then use the conversion: R0 = beta / gamma (Keeling & Rohani 2008 p.42), so beta = R0 * gamma
 #
 # We make a distribution compatible with most recent outbreaks
 r_beta <- function(gamma) {
@@ -194,9 +192,7 @@ beta_I <- beta * w_beta_ICF[1]
 beta_C <- beta * w_beta_ICF[2]
 beta_F <- beta * w_beta_ICF[3]
 
-## eta must be a matrix time x patches; it is here constant over time, so we 
-## just repeat the first row, 365 times, which will be the duration of the 
-## simulation
+## eta must be a matrix time x patches; it is here constant over time, so we just repeat the first row, 365 times, which will be the duration of the simulation
 eta_mat <- matrix(patches$eta, byrow = TRUE, nrow = 365, ncol = J)
 dim(eta_mat)
 #> [1] 365 857
@@ -242,14 +238,12 @@ model <- model_generator$new(
 ## Running the model
 
 Here we illustrate a single model run for 365 days (one run takes about
-10-20s on a standard desktop). Note that the random seed is set here for
-reproducibility purpose only.
+10-20s on a standard desktop).
 
 ``` r
-set.seed(1)
 system.time(res <- model$run(1:365))
 #>    user  system elapsed 
-#>   14.09    0.08   14.28
+#>   13.25    0.11   13.50
 class(res)
 #> [1] "matrix" "array"
 dim(res)
@@ -292,10 +286,10 @@ head(res_smry)
 #>   time V E I F D C R
 #> 1    1 0 0 1 0 0 0 0
 #> 2    2 0 0 1 0 0 0 0
-#> 3    3 0 0 1 0 0 0 0
-#> 4    4 0 0 1 0 0 0 0
-#> 5    5 0 0 1 0 0 0 0
-#> 6    6 0 1 1 0 0 0 0
+#> 3    3 0 0 0 0 0 1 0
+#> 4    4 0 0 0 0 0 1 0
+#> 5    5 0 0 0 0 0 1 0
+#> 6    6 0 0 0 0 0 1 0
 
 res_smry %>%
   pivot_longer(-1, names_to = "Compartment", values_to = "n") %>% 

@@ -88,9 +88,7 @@ r_gamma <- function(n, cfr = 2/3) {
   1 / mean_illness
 }
 
-# beta - rate of infection; for this one, we first get values of R0, and then 
-# use the conversion: R0 = beta / gamma (Keeling & Rohani 2008 p.42), so 
-# beta = R0 * gamma
+# beta - rate of infection; for this one, we first get values of R0, and then use the conversion: R0 = beta / gamma (Keeling & Rohani 2008 p.42), so beta = R0 * gamma
 #
 # We make a distribution compatible with most recent outbreaks
 r_beta <- function(gamma) {
@@ -130,9 +128,7 @@ beta_I <- beta * w_beta_ICF[1]
 beta_C <- beta * w_beta_ICF[2]
 beta_F <- beta * w_beta_ICF[3]
 
-## eta must be a matrix time x patches; it is here constant over time, so we 
-## just repeat the first row, 365 times, which will be the duration of the 
-## simulation
+## eta must be a matrix time x patches; it is here constant over time, so we just repeat the first row, 365 times, which will be the duration of the simulation
 eta_mat <- matrix(patches$eta, byrow = TRUE, nrow = 365, ncol = J)
 dim(eta_mat)
 
@@ -178,12 +174,9 @@ model <- model_generator$new(
 
 ## Running the model
 
-Here we illustrate a single model run for 365 days (one run takes about 10-20s 
-on a standard desktop). Note that the random seed is set here for 
-reproducibility purpose only.
+Here we illustrate a single model run for 365 days (one run takes about 10-20s on a standard desktop). 
 
 ```{r }
-set.seed(1)
 system.time(res <- model$run(1:365))
 class(res)
 dim(res)
@@ -191,11 +184,7 @@ res[1:6, 1:10]
 colnames(res) %>% tail()
 ```
 
-The result has one row per time step, indicated as the first column. Other 
-columns indicate the state of each compartment (first letter) in each patch
-(indicated) within square brackets. The last columns indicate the state of the 
-patches, either 'naive' (value: 1), 'alert' (value: 2), or 'response' 
-(value: 3).
+The result has one row per time step, indicated as the first column. Other columns indicate the state of each compartment (first letter) in each patch (indicated) within square brackets. The last columns indicate the state of the patches, either 'naive' (value: 1), 'alert' (value: 2), or 'response' (value: 3).
 
 
 ## Visualising results
