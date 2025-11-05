@@ -115,7 +115,7 @@ J <- nrow(patches) # number of patches
 ## draw initial introductions
 ini_I <- rmultinom(
   n = 1,
-  size = 2, # specify the number of initial introductions here
+  size = 1, # specify the number of initial introductions here
   prob = patches$weight_intros
   ) %>% 
   as.integer()
@@ -176,8 +176,78 @@ model <- model_generator$new(
 
 ## Running the model
 
-Here we illustrate a single model run for 365 days:
+Here we illustrate a single model run for 365 days (one run takes about 10-20s 
+on a standard desktop). Note that the random seed is set here for 
+reproducibility purpose only.
+
+```{r cache = TRUE}
+set.seed(1)
+system.time(res <- model$run(1:365))
+class(res)
+dim(res)
+res[1:6, 1:10]
+colnames(res) %>% tail()
+```
+
+The result has one row per time step, indicated as the first column. Other 
+columns indicate the state of each compartment (first letter) in each patch
+(indicated) within square brackets. The last columns indicate the state of the 
+patches, either 'naive' (value: 1), 'alert' (value: 2), or 'response' 
+(value: 3).
+
+
+## Visualising results
+
+### Time series
+
 ```{r}
+comps <- c("V", "E", "I", "F", "D", "C", "R")
+res_smry <- list()
+for(e in comps) {
+  to_keep <- grep(sprintf("^[%s]", e), colnames(res))
+  res_smry[[e]] <- rowSums(res[, to_keep])
+}
+res_smry <- cbind(time = 1:365, data.frame(res_smry))
+head(res_smry)
+
+res_smry %>%
+  pivot_longer(-1, names_to = "Compartment", values_to = "n") %>% 
+  ggplot(aes(x = time, y = n, color = Compartment)) + 
+  geom_line(size = 1) + 
+  theme_bw() +
+  labs(
+    x = "Time",
+    y = "Number of individuals", 
+    title = "Overall dynamics"
+    ) + 
+  scale_x_continuous(n.breaks = 10) + 
+  scale_y_continuous(n.breaks = 10) +
+  theme(legend.position = "bottom")
+```
+
+### Mapping total cases
+
+```{r}
+to_keep <- c(grep("^[EIDFRC]", colnames(res)))
+temp <- res[res[, "step"] == 365, to_keep, drop = TRUE]
+patch_id <- as.integer(gsub("[^[:digit:]]", "", names(temp)))
+total_cases <- tapply(temp, patch_id, sum)
+
+df <- cbind(patches, total_cases)
+
+ggplot(df, aes(x = x, y = y)) + 
+  geom_tile(aes(fill = total_cases)) + 
+  scale_fill_viridis_c(
+    option = "magma", 
+    na.value = "transparent", 
+    n.breaks = 7) + 
+  labs(x = "Longitude", 
+       y = "Latitude", 
+       fill = "Total cases") + 
+  scale_x_continuous(n.breaks = 10) + 
+  scale_y_continuous(n.breaks = 10) + 
+  theme(legend.position = "bottom")
 
 ```
+
 
