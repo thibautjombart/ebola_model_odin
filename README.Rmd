@@ -16,6 +16,16 @@ knitr::opts_chunk$set(
 
 ## Required libraries
 
+Run this code if you need to install the libraries used in this script. You normally need to do this only once:
+```{r}
+if (!require(tidyverse)) install.packages("tidyverse")
+if (!require(rio)) install.packages("rio")
+if (!require(here)) install.packages("here")
+if (!require(dde)) install.packages("dde")
+if (!require(odin)) install.packages("odin")
+```
+
+
 We load required libraries:
 ```{r}
 library(tidyverse)
