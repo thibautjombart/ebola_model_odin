@@ -131,7 +131,7 @@ ini_I <- rmultinom(
   as.integer()
 
 ## draw random parameters
-set.seed(123)
+set.seed(12)
 alpha <- r_alpha(1)
 gamma <- r_gamma(1)
 beta <- r_beta(gamma)
@@ -188,7 +188,7 @@ model <- model_generator$new(
 Here we illustrate a single model run for 365 days (one run takes about 10-20s on a standard desktop). 
 
 ```{r }
-set.seed(123)
+set.seed(12)
 system.time(res <- model$run(1:365))
 class(res)
 dim(res)

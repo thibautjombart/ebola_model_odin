@@ -19,19 +19,8 @@ We load required libraries:
 
 ``` r
 library(tidyverse)
-#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
-#> ✔ forcats   1.0.1     ✔ stringr   1.6.0
-#> ✔ ggplot2   4.0.1     ✔ tibble    3.3.0
-#> ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-#> ✔ purrr     1.2.0     
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#> ✖ dplyr::filter() masks stats::filter()
-#> ✖ dplyr::lag()    masks stats::lag()
-#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 library(rio)
 library(here)
-#> here() starts at C:/dev/geomatys/ebola_model_odin
 library(odin)
 ```
 
@@ -45,7 +34,7 @@ model_generator <- odin::odin(path_model)
 #> Loading required namespace: pkgbuild
 #> Generating model in c
 #> ℹ Re-compiling ebolae1b5f94f (debug build)
-#> ── R CMD INSTALL ───────────────────────────────────────────────────────────────
+#> ── R CMD INSTALL ────────────────────────────────────────────────────────────────────
 #>   ─  installing *source* package 'ebolae1b5f94f' ...
 #>      ** this is package 'ebolae1b5f94f' version '0.0.1'
 #>    ** using staged installation
@@ -54,7 +43,7 @@ model_generator <- odin::odin(path_model)
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.2/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c odin.c -o odin.o
 #>      gcc  -I"C:/PROGRA~1/R/R-45~1.2/include" -DNDEBUG     -I"C:/rtools45/x86_64-w64-mingw32.static.posix/include"      -O2 -Wall -std=gnu2x -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign   -UNDEBUG -Wall -pedantic -g -O0 -c registration.c -o registration.o
 #>      gcc -shared -static-libgcc -o ebolae1b5f94f.dll tmp.def odin.o registration.o -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib/x64 -LC:/rtools45/x86_64-w64-mingw32.static.posix/lib -LC:/PROGRA~1/R/R-45~1.2/bin/x64 -lR
-#>      installing to C:/Users/thiba/AppData/Local/Temp/RtmpALtBz0/devtools_install_56144d2622e/00LOCK-file561419d45730/00new/ebolae1b5f94f/libs/x64
+#>      installing to C:/Users/thiba/AppData/Local/Temp/RtmpWWTB2r/devtools_install_40ec33973f1e/00LOCK-file40ec1b9969cd/00new/ebolae1b5f94f/libs/x64
 #>   ─  DONE (ebolae1b5f94f)
 #> 
 #> ℹ Loading ebolae1b5f94f
@@ -114,14 +103,14 @@ dim(patches)
 #> [1] 857   9
 head(patches)
 #> # A tibble: 6 × 9
-#>      V1     x     y     eta pop_size area_sqkm cell.id mean_intros weight_intros
-#>   <int> <dbl> <dbl>   <dbl>    <int>     <dbl>   <int>       <dbl>         <dbl>
-#> 1     1  19.1 -4.02 3.02e-9     1114      21.3  1.85e7    0.00123      0.000696 
-#> 2     2  19.2 -4.02 2.69e-9     3357      21.3  1.85e7    0.00330      0.00187  
-#> 3     3  19.2 -4.02 1.77e-9     2070      21.3  1.85e7    0.00134      0.000757 
-#> 4     4  19.2 -4.02 1.89e-9      155      21.3  1.85e7    0.000107     0.0000607
-#> 5     5  19.3 -4.02 3.01e-9     2911      21.3  1.85e7    0.00320      0.00181  
-#> 6     6  19.3 -4.02 3.02e-9      859      21.3  1.85e7    0.000945     0.000536
+#>      V1     x     y          eta pop_size area_sqkm cell.id mean_intros weight_intros
+#>   <int> <dbl> <dbl>        <dbl>    <int>     <dbl>   <int>       <dbl>         <dbl>
+#> 1     1  19.1 -4.02      3.02e-9     1114      21.3  1.85e7    0.00123      0.000696 
+#> 2     2  19.2 -4.02      2.69e-9     3357      21.3  1.85e7    0.00330      0.00187  
+#> 3     3  19.2 -4.02      1.77e-9     2070      21.3  1.85e7    0.00134      0.000757 
+#> 4     4  19.2 -4.02      1.89e-9      155      21.3  1.85e7    0.000107     0.0000607
+#> 5     5  19.3 -4.02      3.01e-9     2911      21.3  1.85e7    0.00320      0.00181  
+#> 6     6  19.3 -4.02      3.02e-9      859      21.3  1.85e7    0.000945     0.000536
 ```
 
 We read in the connectivity matrix between the 857 populations
@@ -196,7 +185,7 @@ ini_I <- rmultinom(
   as.integer()
 
 ## draw random parameters
-set.seed(123)
+set.seed(12)
 alpha <- r_alpha(1)
 gamma <- r_gamma(1)
 beta <- r_beta(gamma)
@@ -253,10 +242,10 @@ Here we illustrate a single model run for 365 days (one run takes about
 10-20s on a standard desktop).
 
 ``` r
-set.seed(123)
+set.seed(12)
 system.time(res <- model$run(1:365))
 #>    user  system elapsed 
-#>   12.64    0.04   12.69
+#>   12.02    0.08   12.20
 class(res)
 #> [1] "matrix" "array"
 dim(res)
@@ -320,8 +309,7 @@ res_smry %>%
 #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 #> ℹ Please use `linewidth` instead.
 #> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 ```
 
 <img src="figures/unnamed-chunk-10-1.png" width="65%" />
